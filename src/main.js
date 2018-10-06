@@ -9,16 +9,29 @@ Vue.config.productionTip = false
 
 // cordova plugin for vuejs
 
-Vue.use(VueCordova)
-
-Vue.cordova.on('deviceready', () => {
-  console.log('Cordova : device is ready !')
+Vue.use(VueCordova, {
+  optionTestKey: 'optionTestValue'
 })
+
+// add cordova.js only if serving the app through file://
+if (window.location.protocol === 'file:' || window.location.port === '3000') {
+  var cordovaScript = document.createElement('script')
+  cordovaScript.setAttribute('type', 'text/javascript')
+  cordovaScript.setAttribute('src', 'cordova.js')
+  document.body.appendChild(cordovaScript)
+}
+
+console.log(VueCordova)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  data: function () {
+    return {
+      cordova: Vue.cordova
+    }
+  }
 })
